@@ -65,7 +65,7 @@ const QuizPage = () => {
     const score = result.score;
 
     try {
-      const res = await fetch(`/api/results`, {
+      const res = await fetch(`${process.env.URL}/api/results`, {
         method: "POST",
         cache: "no-store",
         headers: {
