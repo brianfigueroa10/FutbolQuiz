@@ -20,16 +20,16 @@ const QuizPage = () => {
   const { questions } = quiz;
   const { question, answers, correctAnswer } = questions[activeQuestion];
 
+  const [username, setUsername] = useState("");
+
   //   Select and check answer
   const onAnswerSelected = (answer: any, idx: any) => {
     setChecked(true);
     setSelectedAnswerIndex(idx);
     if (answer === correctAnswer) {
       setSelectedAnswer(true);
-      console.log("true");
     } else {
       setSelectedAnswer(false);
-      console.log("false");
     }
   };
 
@@ -39,14 +39,14 @@ const QuizPage = () => {
     setResult((prev) =>
       selectedAnswer
         ? {
-            ...prev,
-            score: prev.score + 5,
-            correctAnswers: prev.correctAnswers + 1,
-          }
+          ...prev,
+          score: prev.score + 10,
+          correctAnswers: prev.correctAnswers + 1,
+        }
         : {
-            ...prev,
-            wrongAnswers: prev.wrongAnswers + 1,
-          }
+          ...prev,
+          wrongAnswers: prev.wrongAnswers + 1,
+        }
     );
     if (activeQuestion !== questions.length - 1) {
       setActiveQuestion((prev) => prev + 1);
@@ -57,19 +57,44 @@ const QuizPage = () => {
     setChecked(false);
   };
 
-  const onSubmit = async (e: React.FormEvent<EventTarget>) => {
+  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    router.push("/result");
-  };
+
+    // Asegúrate de que 'name' y 'results.score' estén definidos aquí
+    const name = username;
+    const score = result.score;
+
+    try {
+      const res = await fetch(`/api/results`, {
+        method: "POST",
+        cache: "no-store",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name, score }), // incluye 'name' y 'score' en el cuerpo de la solicitud
+      });
+      if (res.ok) {
+        console.log("ok");
+        router.push("/results");
+        router.refresh()
+        console.log(res);
+      } else {
+        console.log("error");
+      }
+    } catch (error) {
+      // maneja la excepción aquí
+      console.log("error");
+    }
+  }
 
   return (
     <div className="flex flex-col min-h-screen justify-center items-center gap-7">
       <div className="items-center flex flex-col">
-              <h2 className="text-4xl font-black text-white">ChampionsTrivia</h2>
+        <h2 className="text-4xl font-black text-white">ChampionsTrivia</h2>
       </div>
-          <div className="items-center w-[90%] md:w-96 justify-center  shadow-2xl shadow-black ">
+      <div className="items-center w-[90%] md:w-96 justify-center  shadow-2xl shadow-black ">
         {!showResult ? (
-                  <div className="flex flex-col justify-center bg-slate-100 rounded-md p-5 gap-3  items-center z-10">
+          <div className="flex flex-col justify-center bg-slate-100 rounded-md p-5 gap-3  items-center z-10">
             <h3 className="border-b border-sky-400">
               Pregunta: {activeQuestion + 1}
               <span>/{questions.length}</span>
@@ -80,11 +105,10 @@ const QuizPage = () => {
                 <li
                   key={idx}
                   onClick={() => onAnswerSelected(answer, idx)}
-                  className={`${
-                    selectedAnswerIndex === idx
+                  className={`${selectedAnswerIndex === idx
                       ? "bg-orange-400 flex hover:bg-orange-500 text-white p-2 px-4 rounded-md cursor-pointer border border-gray-300"
                       : " text-slate-900 px-4   hover:bg-slate-200 cursor-pointer border border-gray-400"
-                  } list-none  p-2 rounded-md`}>
+                    } list-none  p-2 rounded-md`}>
                   <span>{answer}</span>
                 </li>
               ))}
@@ -107,39 +131,44 @@ const QuizPage = () => {
             )}
           </div>
         ) : (
-          <div className="flex flex-col justify-center bg-slate-100 rounded-md p-5 gap-3 items-center shadow-2xl shadow-black">
-            <div className="flex flex-col justify-center bg-slate-100 rounded-md p-5 gap-3 items-center">
-              <h3 className="text-2xl font-black">Resultado</h3>
-              <p className="text-xl flex flex-col items-center justify-center">
-                Puntaje:{" "}
-                <span className="from-black text-3xl">{result.score}</span>
-              </p>
-              <p>
-                Respuestas correctas:{" "}
-                <span className="font-bold">{result.correctAnswers}</span>
-              </p>
-              <p>
-                Respuestas Incorrectas:{" "}
-                <span className="font-bold">{result.wrongAnswers}</span>
-              </p>
-            </div>
+            <>
+              <div className="flex flex-col justify-center bg-slate-100 rounded-md p-5 gap-3 items-center shadow-2xl shadow-black">
+                <div className="flex flex-col justify-center bg-slate-100 rounded-md p-5 gap-3 items-center">
+                  <Confettis  />
+                  <h3 className="text-2xl font-black">Resultado</h3>
+                  <p className="text-xl flex flex-col items-center justify-center">
+                    Puntaje:{" "}
+                    <span className="from-black text-3xl">{result.score}</span>
+                  </p>
+                  <p>
+                    Respuestas correctas:{" "}
+                    <span className="font-bold">{result.correctAnswers}</span>
+                  </p>
+                  <p>
+                    Respuestas Incorrectas:{" "}
+                    <span className="font-bold">{result.wrongAnswers}</span>
+                  </p>
+                </div>
 
-            <form
-              onSubmit={onSubmit}
-              className="flex flex-col gap-2 justify-center items-center">
-              <input
-                type="text"
-                placeholder="Tu nombre"
-                className="w-56 rounded-md bg-slate-900 p-2 text-slate-50 border-2 border-sky-400 hover:bg-sky-800 placeholder:text-center text-center"
-                required
-              />
-              {/*<button onClick={() => window.location.reload()} className='w-56 rounded-md bg-sky-900 p-2 text-slate-50 border-2 border-sky-400 hover:bg-sky-800'>Restart</button>*/}
-              <button className="w-56 rounded-md bg-sky-900 p-2 text-slate-50 border-2 border-sky-400 hover:bg-sky-800">
-                ENVIAR
-              </button>
-                          </form>
-                          <Confettis />
-          </div>
+                <form
+                  onSubmit={onSubmit}
+                  className="flex flex-col gap-2 justify-center items-center">
+                  <input
+                    type="text"
+                    placeholder="Tu nombre"
+                    className="w-56 rounded-md bg-slate-900 p-2 text-slate-50 border-2 border-sky-400 hover:bg-sky-800 placeholder:text-center text-center"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    required
+                  />
+
+                  <button className="w-56 rounded-md bg-sky-900 p-2 text-slate-50 border-2 border-sky-400 hover:bg-sky-800">
+                    ENVIAR
+                  </button>
+                </form>
+              </div>
+            </>
+
         )}
       </div>
     </div>

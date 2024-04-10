@@ -1,16 +1,15 @@
 'use client'
 
+
+import { Users } from '@/utils/getAllUsers'
 import Link from 'next/link'
 import React, { useEffect } from 'react'
 
-
-export default function Results() {
-    const results = [
-        { name: 'John', score: 80 },
-        { name: 'Jane', score: 90 },
-        { name: 'Bob', score: 75 },
-    ];
-
+interface Props {
+    users: Users[] | null
+}
+export default function Results({ users }: Props) {
+    const results = users?.sort((a, b) => b.score - a.score);
 
     return (
         <div className='flex flex-col min-h-screen justify-center items-center gap-7'>
@@ -24,21 +23,33 @@ export default function Results() {
                 <table className='md:w-96 gap-3 h-auto w-72'>
                     <thead className=' '>
                         <tr className='px-2 rounded-md border-b'>
+                            <th className='text-start px-4'>Posicion</th>
                             <th className='text-start px-4'>Nombre</th>
                             <th className='text-end px-4'>Puntaje</th>
                         </tr>
                     </thead>
                     <tbody className=' '>
-                        {results.map((result, index) => (
-                            <tr key={index} className='px-2 rounded-md gap-3 border-b hover:bg-slate-200 first:bg-slate-300 first:h-9 first:font-bold first:text-lg first:hover:bg-slate-500 '>
-                                <td className='text-start px-4 '>{result.name}</td>
-                                <td className='text-end px-4 font-bold'>{result.score}</td>
-                            </tr>
-                        ))}
+                        {results && results.length > 0 ? (
+                            results.map((result: Users, index: number) => (
+                                <tr key={index} className='px-2 rounded-md gap-3 border-b hover:bg-slate-200 first:bg-slate-300 first:h-9 first:font-bold first:text-lg first:hover:bg-slate-500'>
+                                    <td className='text-start px-4'>{index + 1}</td>
+
+                                    <td className='text-start px-4'>{result.name}</td>
+                                    <td className='text-end px-4 font-bold'>{result.score}</td>
+                                </tr>
+                            ))
+                        ) : (
+                            <div>
+                                Cargando...
+                            </div>
+                        )}
+                        
+                            
+                            
                     </tbody>
                 </table>
             </div>
-    
+   
         </div>
     )
 }

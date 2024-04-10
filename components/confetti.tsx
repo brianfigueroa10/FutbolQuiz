@@ -1,16 +1,16 @@
-'use client'
+import React, { useEffect } from 'react';
 import confetti from "canvas-confetti";
 
 export default function Confettis() {
-    const duration = 5 * 1000;
-    const animationEnd = Date.now() + duration;
-    const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+    useEffect(() => {
+        const duration = 5 * 1000;
+        const animationEnd = Date.now() + duration;
+        const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
 
-    function randomInRange(min: number, max : number) {
-        return Math.random() * (max - min) + min;
-    }
+        function randomInRange(min: number, max: number) {
+            return Math.random() * (max - min) + min;
+        }
 
-    const handleConfetti = () => {
         const interval: NodeJS.Timeout = setInterval(function () {
             const timeLeft = animationEnd - Date.now();
 
@@ -33,11 +33,9 @@ export default function Confettis() {
                 })
             );
         }, 500);
-    };
 
-    // Llama a handleConfetti
-    handleConfetti();
-    return <div >
+        return () => clearInterval(interval); // Limpiar el intervalo cuando el componente se desmonte
+    }, []); // Array vacío significa que este efecto no depende de ningún valor de propiedades o estado
 
-    </div>;
+    return <div />;
 }
