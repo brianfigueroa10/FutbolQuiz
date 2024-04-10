@@ -79,7 +79,7 @@ const QuizPage = () => {
         router.refresh()
         console.log(res);
       } else {
-        console.log("error");
+        console.log("res no ok");
       }
     } catch (error) {
       // maneja la excepción aquí
