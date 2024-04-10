@@ -6,7 +6,7 @@ export type Users = {
 
 export const getAllUsers = async (): Promise<Users[] | null> => {
     try {
-        const res = await fetch(`/api/results`, { cache: "no-store", });
+        const res = await fetch(`${process.env.URL}/api/results`, { cache: "no-store", });
         if (res.ok) {
             const data = await res.json();
             return data.users;
