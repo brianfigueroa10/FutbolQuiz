@@ -1,9 +1,11 @@
 "use client";
 import { Question, Quiz, quiz} from "@/utils/data";
 import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import Confettis from "./confetti";
 import { revalidatePath } from "next/cache";
+import Loading from "@/app/quiz/loading";
+import Link from "next/link";
 
 function selectRandomQuestions(quiz : Quiz, numQuestions : number) {
   const selectedIndices: number[] = [];
@@ -36,6 +38,7 @@ const QuizPage = () => {
   const [checked, setChecked] = useState(false);
   const [selectedAnswerIndex, setSelectedAnswerIndex] = useState(null);
   const [showResult, setShowResult] = useState(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [result, setResult] = useState({
     score: 0,
     correctAnswers: 0,
@@ -87,7 +90,7 @@ const QuizPage = () => {
     e.preventDefault();
     const name = username;
     const score = result.score;
-
+    setIsLoading(true);
     try {
       const res = await fetch(`/api/results`, {
         method: "POST",
@@ -100,6 +103,7 @@ const QuizPage = () => {
       if (res.ok) {
         router.push("/results");
         router.refresh()
+   
 
       } else {
         console.log("res no ok");
@@ -113,7 +117,10 @@ const QuizPage = () => {
   return (
     <div className="flex flex-col min-h-dvh justify-center items-center gap-7">
       <div className="items-center flex flex-col">
-        <h2 className="text-4xl font-black bg-gradient-to-r from-fuchsia-500 to-cyan-500 bg-clip-text text-transparent">Goalfy</h2>
+        <Link href="/" >
+          <h2 className="text-4xl font-black bg-gradient-to-r from-fuchsia-500 to-cyan-500 bg-clip-text text-transparent">Goalfy</h2>
+
+        </Link>
       </div>
       <div className="items-center w-[90%] md:w-96 justify-center  shadow-2xl shadow-black ">
         {!showResult ? (
@@ -122,6 +129,7 @@ const QuizPage = () => {
               Pregunta: {activeQuestion + 1}
               <span>/{questions.length}</span>
             </h3>
+            <Suspense fallback={<Loading />}>
             <div className="flex flex-col gap-4">
               <h3 className="text-xl">{questions[activeQuestion]?.question}</h3>
               {answers?.map((answer: any, idx: any) => (
@@ -135,7 +143,8 @@ const QuizPage = () => {
                   <span>{answer}</span>
                 </li>
               ))}
-            </div>
+              </div>
+              </Suspense>
 
             {checked ? (
               <button
@@ -185,8 +194,8 @@ const QuizPage = () => {
                     required
                   />
 
-                  <button className="w-56 rounded-md font-bold py-2 px-2 border border-gray-400 bg-gradient-to-r from-fuchsia-500 to-cyan-500 hover:from-fuchsia-600 hover:to-cyan-600 text-white">
-                    ENVIAR
+                  <button disabled={isLoading} className={`${isLoading ? "cursor-not-allowed bg-gray-400" : " border-gray-400 bg-gradient-to-r from-fuchsia-500 to-cyan-500 hover:from-fuchsia-600 hover:to-cyan-600"} w-56 rounded-md font-bold py-2 px-2 border text-white`}>
+                    {isLoading ? "Guardando.." : "Enviar"}
                   </button>
                 </form>
               </div>
