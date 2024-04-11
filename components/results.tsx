@@ -12,11 +12,13 @@ export default function Results({ users }: Props) {
     const results = users?.sort((a, b) => b.score - a.score);
 
     return (
-        <div className='flex flex-col min-h-screen justify-center items-center gap-7'>
+        <div className='flex flex-col min-h-dvh justify-center items-center gap-7'>
             <div className='flex flex-col items-center justify-center gap-4'>
-                <Link href="/"><button className="text-lg rounded-md bg-black p-2 py-1 text-slate-50 border-2 border-sky-400 hover:bg-sky-800"> ← </button></Link>
-                <h2 className="text-4xl font-black text-center text-white">
-                    RESULTADOS GENERALES:
+                <Link href="/">
+                    <button className="text-lg rounded-md bg-black p-2 py-1 text-slate-50 border-2 border-sky-400 hover:bg-sky-900"> ← </button>
+                </Link>
+                <h2 className="text-4xl font-black text-center bg-gradient-to-r from-fuchsia-500 to-cyan-500 bg-clip-text text-transparent">
+                    RANKING
                 </h2>
             </div>
             <div className=' bg-slate-100 p-3 rounded-md  shadow-2xl shadow-black'>
@@ -30,7 +32,7 @@ export default function Results({ users }: Props) {
                     </thead>
                     <tbody className=' '>
                         {results && results.length > 0 ? (
-                            results.map((result: Users, index: number) => (
+                            results.slice(0,15).map((result: Users, index: number) => (
                                 <tr key={index} className='px-2 rounded-md gap-3 border-b hover:bg-slate-200 first:bg-slate-300 first:h-9 first:font-bold first:text-lg first:hover:bg-slate-500'>
                                     <td className='text-start px-4'>{index + 1}</td>
 

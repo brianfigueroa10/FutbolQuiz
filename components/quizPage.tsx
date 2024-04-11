@@ -1,10 +1,36 @@
 "use client";
-import { quiz } from "@/utils/data";
+import { Question, Quiz, quiz} from "@/utils/data";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Confettis from "./confetti";
+import { revalidatePath } from "next/cache";
+
+function selectRandomQuestions(quiz : Quiz, numQuestions : number) {
+  const selectedIndices: number[] = [];
+  const selectedQuestions: Question[] = [];
+
+
+  while (selectedIndices.length < numQuestions) {
+    const randomIndex = Math.floor(Math.random() * quiz.questions.length);
+    if (!selectedIndices.includes(randomIndex)) {
+      selectedIndices.push(randomIndex);
+    }
+  }
+
+  for (const index of selectedIndices) {
+    selectedQuestions.push(quiz.questions[index]);
+  }
+
+  return {
+    totalQuestions: numQuestions,
+    questions: selectedQuestions
+  };
+}
 
 const QuizPage = () => {
+  const router = useRouter();
+  const [questions, setQuestions] = useState<Question[]>([]);
+  const [username, setUsername] = useState("");
   const [activeQuestion, setActiveQuestion] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState(false);
   const [checked, setChecked] = useState(false);
@@ -15,14 +41,15 @@ const QuizPage = () => {
     correctAnswers: 0,
     wrongAnswers: 0,
   });
-  const router = useRouter();
 
-  const { questions } = quiz;
-  const { question, answers, correctAnswer } = questions[activeQuestion];
+  useEffect(() => {
+    // Genera randomQuiz solo en el lado del cliente
+    setQuestions(selectRandomQuestions(quiz, 10).questions);
+  }, []);
 
-  const [username, setUsername] = useState("");
+  const { question, answers, correctAnswer } = questions[activeQuestion] || {};
+  // Resto del código...
 
-  //   Select and check answer
   const onAnswerSelected = (answer: any, idx: any) => {
     setChecked(true);
     setSelectedAnswerIndex(idx);
@@ -33,7 +60,6 @@ const QuizPage = () => {
     }
   };
 
-  // Calculate score and increment to next question
   const nextQuestion = () => {
     setSelectedAnswerIndex(null);
     setResult((prev) =>
@@ -59,8 +85,6 @@ const QuizPage = () => {
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-
-    // Asegúrate de que 'name' y 'results.score' estén definidos aquí
     const name = username;
     const score = result.score;
 
@@ -71,26 +95,25 @@ const QuizPage = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ name, score }), // incluye 'name' y 'score' en el cuerpo de la solicitud
+        body: JSON.stringify({ name, score }), 
       });
       if (res.ok) {
-        console.log("ok");
         router.push("/results");
         router.refresh()
-        console.log(res);
+
       } else {
         console.log("res no ok");
       }
     } catch (error) {
-      // maneja la excepción aquí
       console.log("error");
     }
   }
 
+
   return (
-    <div className="flex flex-col min-h-screen justify-center items-center gap-7">
+    <div className="flex flex-col min-h-dvh justify-center items-center gap-7">
       <div className="items-center flex flex-col">
-        <h2 className="text-4xl font-black text-white">ChampionsTrivia</h2>
+        <h2 className="text-4xl font-black bg-gradient-to-r from-fuchsia-500 to-cyan-500 bg-clip-text text-transparent">Goalfy</h2>
       </div>
       <div className="items-center w-[90%] md:w-96 justify-center  shadow-2xl shadow-black ">
         {!showResult ? (
@@ -100,8 +123,8 @@ const QuizPage = () => {
               <span>/{questions.length}</span>
             </h3>
             <div className="flex flex-col gap-4">
-              <h3 className="text-xl">{questions[activeQuestion].question}</h3>
-              {answers.map((answer: any, idx: any) => (
+              <h3 className="text-xl">{questions[activeQuestion]?.question}</h3>
+              {answers?.map((answer: any, idx: any) => (
                 <li
                   key={idx}
                   onClick={() => onAnswerSelected(answer, idx)}
@@ -117,16 +140,16 @@ const QuizPage = () => {
             {checked ? (
               <button
                 onClick={nextQuestion}
-                className=" w-56 flex items-center justify-center rounded-md bg-sky-900 p-2 text-slate-50 border-2 border-sky-400 hover:bg-sky-800">
+                className=" w-56 flex items-center justify-center rounded-md  font-bold py-2 px-2 border border-gray-400 bg-gradient-to-r from-fuchsia-500 to-cyan-500 hover:from-fuchsia-600 hover:to-cyan-600 text-white">
                 {activeQuestion === question.length - 1 ? "Finish" : "Next"}
               </button>
             ) : (
               <button
                 onClick={nextQuestion}
                 disabled
-                className="w-56 text-center items-center justify-center rounded-md bg-gray-400 p-2 text-slate-50 border-2 border-gray-400 hover:bg-gray-500 cursor-not-allowed">
+                  className="w-56 flex items-center justify-center rounded-md  font-bold py-2 px-2 border border-gray-400 bg-gray-400 text-slate-50   hover:bg-gray-500 cursor-not-allowed">
                 {" "}
-                {activeQuestion === question.length - 1 ? "Finish" : "Next"}
+                {activeQuestion === question?.length - 1 ? "Finish" : "Next"}
               </button>
             )}
           </div>
@@ -156,13 +179,13 @@ const QuizPage = () => {
                   <input
                     type="text"
                     placeholder="Tu nombre"
-                    className="w-56 rounded-md bg-slate-900 p-2 text-slate-50 border-2 border-sky-400 hover:bg-sky-800 placeholder:text-center text-center"
+                    className="w-56 rounded-md bg-[#030303] p-2 text-white border-2 border-neutral-600 hover:bg-gray-900 placeholder:text-center placeholder:text-white text-center"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
                     required
                   />
 
-                  <button className="w-56 rounded-md bg-sky-900 p-2 text-slate-50 border-2 border-sky-400 hover:bg-sky-800">
+                  <button className="w-56 rounded-md font-bold py-2 px-2 border border-gray-400 bg-gradient-to-r from-fuchsia-500 to-cyan-500 hover:from-fuchsia-600 hover:to-cyan-600 text-white">
                     ENVIAR
                   </button>
                 </form>

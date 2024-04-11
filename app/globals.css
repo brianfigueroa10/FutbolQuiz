@@ -16,7 +16,9 @@
 
 
 body {
-  @apply bg-gradient-to-r from-slate-900 to-slate-700
+  background-color: #ffffff;
+
+background: linear-gradient(135deg, #00067b55 25%, transparent 25%) -7px 0/ 14px 14px, linear-gradient(225deg, #000002 25%, transparent 25%) -7px 0/ 14px 14px, linear-gradient(315deg, #00067b55 25%, transparent 25%) 0px 0/ 14px 14px, linear-gradient(45deg, #040626 25%, #000000 25%) 0px 0/ 14px 14px;
 }
 
 @layer utilities {
@@ -24,3 +26,4 @@ body {
     text-wrap: balance;
   }
 }
+
