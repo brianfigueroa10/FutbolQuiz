@@ -1,12 +1,12 @@
 {
-    "theme_color": "#3579f6",
-    "background_color": "#ffffff",
+    "theme_color": "#070c4a",
+    "background_color": "#000000",
     "display": "standalone",
     "scope": "/",
     "start_url": "/",
-    "name": "Next-PWA",
-    "short_name": "Next-PWA",
-    "description": "A Demo for Next-PWA",
+    "name": "Goolfy",
+    "short_name": "GFY",
+    "description": "Goolfy app to play trivia game",
     "icons": [
         {
             "src": "/icon-192x192.png",
