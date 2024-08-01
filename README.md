@@ -1,36 +1,60 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Goolfy
 
-## Getting Started
+Goolfy es una aplicación de juego de preguntas y respuestas donde los usuarios responden a 10 preguntas para acumular puntos. Al final del juego, los usuarios ingresan su nombre y los resultados se guardan en una base de datos MongoDB. Los resultados de todos los participantes se muestran en la aplicación.
 
-First, run the development server:
+## Características
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- **Juego de Preguntas:** Los usuarios responden a 10 preguntas para acumular puntos.
+- **Guardar Resultados:** Los resultados se almacenan en una base de datos MongoDB.
+- **Resultados de Participantes:** Visualiza todos los resultados de los participantes.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Tecnologías Utilizadas
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- **Next.js:** Framework de React para aplicaciones web.
+- **Tailwind CSS:** Framework de diseño para estilos personalizados.
+- **TypeScript:** Superset de JavaScript para un desarrollo más seguro.
+- **Prisma:** ORM para manejar la base de datos.
+- **MongoDB:** Base de datos NoSQL para almacenamiento de datos.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+## Instalación
 
-## Learn More
+1. Clona el repositorio:
 
-To learn more about Next.js, take a look at the following resources:
+   ```bash
+   git clone https://github.com/brianfigueroa10/Goolfy.git
+    ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+2. **Instalar las dependencias:**
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+    ```bash
+    cd Goolfy
+    npm install
+    ```
 
-## Deploy on Vercel
+3. **Iniciar la aplicación:**
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+    ```bash
+    npm run serve
+    ```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+4. **Abrir en tu navegador:** Abre `http://localhost:3000` en tu navegador web favorito.
+
+## Ejemplo de Uso
+
+1. **Explorar el catálogo:** Navega por la lista de productos disponibles y consulta sus detalles.
+2. **Agregar al carrito:** Haz clic en el botón "Agregar al carrito" para añadir productos al carrito de compras.
+3. **Gestionar el carrito:** Ve al carrito de compras para ajustar las cantidades de los productos seleccionados.
+
+## Captura de Pantalla
+
+![Captura de Pantalla](https://res.cloudinary.com/dv4ukplcm/image/upload/f_auto,q_auto/v1/proyects/vszb6vt8mohgl9c7r2g0)
+
+## Contribuciones
+
+Las contribuciones son bienvenidas. Si deseas contribuir a este proyecto, por favor sigue estos pasos:
+
+1. **Fork este repositorio.**
+2. **Crea una rama con tu nueva característica (`git checkout -b feature/nueva-caracteristica`).**
+3. **Haz commit de tus cambios (`git commit -m 'Agrega nueva característica'`).**
+4. **Push a la rama (`git push origin feature/nueva-caracteristica`).**
+5. **Abre un Pull Request.**
