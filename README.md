@@ -34,7 +34,7 @@ Goolfy es una aplicación de juego de preguntas y respuestas donde los usuarios 
 3. **Iniciar la aplicación:**
 
     ```bash
-    npm run serve
+    npm run dev
     ```
 
 4. **Abrir en tu navegador:** Abre `http://localhost:3000` en tu navegador web favorito.
